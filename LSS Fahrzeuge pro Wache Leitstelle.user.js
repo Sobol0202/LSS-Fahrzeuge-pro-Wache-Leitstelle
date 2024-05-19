@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LSS Fahrzeuge pro Wache Leitstelle
 // @namespace    www.leitstellenspiel.de
-// @version      1.1
+// @version      1.2
 // @description  Fügt die Anzahl der Fahrzeuge hinter die Ausbaustufe ein
 // @author       MissSobol
 // @match        https://www.leitstellenspiel.de/buildings/*
@@ -40,7 +40,24 @@
                 const buildingId = buildingLink.href.split('/').pop();
                 const vehicleCount = vehicles.filter(vehicle => vehicle.building_id === parseInt(buildingId)).length;
                 //console.log(`Gebäude-ID: ${buildingId}, Fahrzeuganzahl: ${vehicleCount}`);
-                upgradeCell.textContent += ` (${vehicleCount})`;
+
+                // Wenn die Fahrzeuganzahl 0 ist, nichts einfügen
+                if (vehicleCount === 0) {
+                    //console.log(`Fahrzeuganzahl für Gebäude-ID ${buildingId} ist 0, nichts wird eingefügt.`);
+                    continue;
+                }
+
+                const upgradeLevel = parseInt(upgradeCell.textContent.trim());
+
+                if (vehicleCount <= upgradeLevel) {
+                    const vehicleCountSpan = document.createElement('span');
+                    vehicleCountSpan.textContent = ` (${vehicleCount})`;
+                    vehicleCountSpan.style.color = 'red';
+                    vehicleCountSpan.style.fontWeight = 'bold';
+                    upgradeCell.appendChild(vehicleCountSpan);
+                } else {
+                    upgradeCell.textContent += ` (${vehicleCount})`;
+                }
             } else {
                 //console.log("Kein gültiger Gebäudelink oder Ausbaustufe gefunden in Zeile:", row);
             }
@@ -50,7 +67,7 @@
     // Funktion zum Initialisieren des Observers
     function initObserver() {
         const observer = new MutationObserver((mutations) => {
-            //console.log("Mutations erkannt:", mutations);
+            //console.log("Mutationen erkannt:", mutations);
             for (const mutation of mutations) {
                 if (mutation.type === 'childList' && mutation.addedNodes.length) {
                     for (const node of mutation.addedNodes) {
