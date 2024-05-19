@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         LSS Fahrzeuge pro Wache Leitstelle
 // @namespace    www.leitstellenspiel.de
-// @version      1.0
+// @version      1.1
 // @description  Fügt die Anzahl der Fahrzeuge hinter die Ausbaustufe ein
 // @author       MissSobol
 // @match        https://www.leitstellenspiel.de/buildings/*
@@ -11,7 +11,7 @@
 (function() {
     'use strict';
 
-    console.log("Tampermonkey-Skript gestartet.");
+    //console.log("Tampermonkey-Skript gestartet.");
 
     // Funktion zum Abrufen der Fahrzeugdaten
     async function fetchVehicles() {
